@@ -65,8 +65,6 @@ resource "aws_security_group" "Private-SG" {
     description = "Ping"
     from_port   = 0
     to_port     = 0
-
-    # Here adding tcp instead of http, because http in part of tcp only!
     protocol    = "ICMP"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -77,7 +75,7 @@ resource "aws_security_group" "Private-SG" {
     from_port   = 22
     to_port     = 22
 
-    # Here adding tcp instead of http, because http in part of tcp only!
+    # Here adding tcp instead of ssh, because ssh in part of tcp only!
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
