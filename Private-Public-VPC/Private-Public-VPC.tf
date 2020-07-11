@@ -41,8 +41,9 @@ resource "aws_subnet" "subnet2" {
   }
 }
 
-// Creating security group for webserver!
-resource "aws_security_group" "ISG" {
+// Creating security group for webserver!  Note: This security group we will use to create the instances in the private subnet secure,
+// as the instances with this security group attached only have access to the private subnet.
+resource "aws_security_group" "Private-SG" {
 
   description = "HTTP, PING, SSH"
   name = "Webserver-SG"
