@@ -228,6 +228,7 @@ resource "aws_instance" "MySQL" {
 resource "aws_instance" "Bastion-Host" {
   ami = "ami-0162dd7febeafb455"
   instance_type = "t2.micro"
+  subnet_id = aws_subnet.subnet1.id
 
   // Keyname and security group are obtained from the reference of their instances created above!
   key_name = aws_key_pair.Key-Pair.key_name
