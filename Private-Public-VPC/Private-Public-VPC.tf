@@ -11,4 +11,10 @@ resource "aws_key_pair" "Key-Pair" {
   public_key = file("~/.ssh/id_rsa.pub")
   }
 
-
+// Creating a VPC!
+resource "aws_vpc" "custom" {
+  cidr_block       = "57.95.0.0/16"
+  tags = {
+    Name = "custom"
+  }
+}
