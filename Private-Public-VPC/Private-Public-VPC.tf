@@ -173,10 +173,27 @@ resource "aws_security_group" "DB-SG-SSH" {
   }
 }
 
+// Creating an Route Table for the public subnet!
+resource "aws_route_table" "Public-Subnet-RT" {
+  vpc_id = aws_vpc.custom.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.Internet_Gateway.id
+  }
+
+  tags = {
+    Name = "Route Table for Internet Gateway"
+  }
+}
+
+
+
 // Creating an AWS instance for the Webserver!
 resource "aws_instance" "webserver" {
   ami = "ami-0162dd7febeafb455"
   instance_type = "t2.micro"
+  subnet_id = aws_subnet.subnet1.id
 
   // Keyname and security group are obtained from the reference of their instances created above!
   key_name = aws_key_pair.Key-Pair.key_name
