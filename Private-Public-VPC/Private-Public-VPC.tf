@@ -187,6 +187,14 @@ resource "aws_route_table" "Public-Subnet-RT" {
   }
 }
 
+// Creating a resource for the Route Table Association!
+resource "aws_route_table_association" "RT-IG-Association" {
+//  Public Subnet ID
+  subnet_id      = aws_subnet.subnet1.id
+
+//  Route Table ID
+  route_table_id = aws_route_table.Public-Subnet-RT.id
+}
 
 
 // Creating an AWS instance for the Webserver!
