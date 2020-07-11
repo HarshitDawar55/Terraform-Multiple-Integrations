@@ -186,7 +186,10 @@ resource "aws_instance" "MySQL" {
 
   // Keyname and security group are obtained from the reference of their instances created above!
   key_name = aws_key_pair.Key-Pair.key_name
-  security_groups =  [aws_security_group.MySQL-SG.name]
+
+  // Attaching 2 security groups here, 1 for the MySQL Database access by the Web-servers, & other one for the Bastion Host
+  // access for applying updates & patches!
+  security_groups =  [aws_security_group.MySQL-SG.name, aws_security_group.DB-SG-SSH.name]
 
   // user_data = file("init_conf.sh")
   tags = {
