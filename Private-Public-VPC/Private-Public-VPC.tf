@@ -81,7 +81,7 @@ resource "aws_security_group" "Private-SG" {
   }
 
   egress {
-    description = "ouput from webserver"
+    description = "output from webserver"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
