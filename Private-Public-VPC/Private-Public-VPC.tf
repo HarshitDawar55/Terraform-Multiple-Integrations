@@ -141,13 +141,12 @@ resource "aws_security_group" "BH-SG" {
 
 // Creating an AWS instance for the Webserver!
 resource "aws_instance" "webserver" {
-  ami = "ami-0c302eb6b698aa47e"
+  ami = "ami-0162dd7febeafb455"
   instance_type = "t2.micro"
 
   // Keyname and security group are obtained from the reference of their instances created above!
   key_name = aws_key_pair.Key-Pair.key_name
   security_groups =  [aws_security_group.WS-SG.name]
-
 
   // user_data = file("init_conf.sh")
   tags = {
