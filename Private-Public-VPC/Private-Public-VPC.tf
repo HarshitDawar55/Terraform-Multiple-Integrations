@@ -139,6 +139,31 @@ resource "aws_security_group" "BH-SG" {
   }
 }
 
+// Creating security group for MySQL Bastion Host Access
+resource "aws_security_group" "DB-SG-SSH" {
+
+  description = "MySQL Bastion host access for updates!"
+  name = "MySQL-SG-BH"
+  vpc_id = aws_vpc.custom.id
+
+  // Created an inbound rule for MySQL Bastion Host
+  ingress {
+    description = "Bastion Host SG"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    security_groups = [aws_security_group.BH-SG.name]
+  }
+
+  egress {
+    description = "output from MySQL"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 // Creating an AWS instance for the Webserver!
 resource "aws_instance" "webserver" {
   ami = "ami-0162dd7febeafb455"
