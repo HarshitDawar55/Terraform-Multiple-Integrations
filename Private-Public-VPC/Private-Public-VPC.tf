@@ -41,6 +41,15 @@ resource "aws_subnet" "subnet2" {
   }
 }
 
+// Creating an Internet Gateway for the VPC
+resource "aws_internet_gateway" "Internet_Gateway" {
+  vpc_id = aws_vpc.custom.id
+
+  tags = {
+    Name = "IG-Public-&-Private-VPC"
+  }
+}
+
 // Creating security group for webserver!  Note: This security group we will use to create the instances in the private subnet secure,
 // as the instances with this security group attached only have access to the private subnet.
 resource "aws_security_group" "WS-SG" {
