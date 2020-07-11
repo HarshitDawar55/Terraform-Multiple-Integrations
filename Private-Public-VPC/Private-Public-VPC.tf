@@ -113,3 +113,28 @@ resource "aws_security_group" "MySQL-SG" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+// Creating security group for Bastion Host/Jump Box
+resource "aws_security_group" "BH-SG" {
+
+  description = "MySQL Access only from the Webserver Instances!"
+  name = "MySQL-SG"
+  vpc_id = aws_vpc.custom.id
+
+  // Created an inbound rule for webserver
+  ingress {
+    description = "Bastion Host SG"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "output from MySQL"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
