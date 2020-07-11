@@ -209,6 +209,7 @@ resource "aws_instance" "webserver" {
 resource "aws_instance" "MySQL" {
   ami = "ami-0162dd7febeafb455"
   instance_type = "t2.micro"
+  subnet_id = aws_subnet.subnet2.id
 
   // Keyname and security group are obtained from the reference of their instances created above!
   key_name = aws_key_pair.Key-Pair.key_name
