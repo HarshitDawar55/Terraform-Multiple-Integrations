@@ -154,7 +154,7 @@ resource "aws_instance" "webserver" {
   }
 }
 
-// Creating an AWS instance for the MySQL!
+// Creating an AWS instance for the MySQL! It should be launched in the private subnet!
 resource "aws_instance" "MySQL" {
   ami = "ami-0162dd7febeafb455"
   instance_type = "t2.micro"
@@ -169,7 +169,7 @@ resource "aws_instance" "MySQL" {
   }
 }
 
-// Creating an AWS instance for the Webserver!
+// Creating an AWS instance for the Bastion Host, It should be launched in the public Subnet!
 resource "aws_instance" "Bastion-Host" {
   ami = "ami-0162dd7febeafb455"
   instance_type = "t2.micro"
