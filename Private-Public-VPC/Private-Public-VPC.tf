@@ -43,7 +43,7 @@ resource "aws_subnet" "subnet2" {
 
 // Creating security group for webserver!  Note: This security group we will use to create the instances in the private subnet secure,
 // as the instances with this security group attached only have access to the private subnet.
-resource "aws_security_group" "Private-SG" {
+resource "aws_security_group" "WS-SG" {
 
   description = "HTTP, PING, SSH"
   name = "Webserver-SG"
@@ -82,6 +82,31 @@ resource "aws_security_group" "Private-SG" {
 
   egress {
     description = "output from webserver"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+// Creating security group for MySQL, this will allow access only from the instances having the security group created above.
+resource "aws_security_group" "MySQL-SG" {
+
+  description = "MySQL Access only from the Webserver Instances!"
+  name = "MySQL-SG"
+  vpc_id = aws_vpc.custom.id
+
+  // Created an inbound rule for webserver
+  ingress {
+    description = "MySQL Access"
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    security_groups = [aws_security_group.WS-SG.id]
+  }
+
+  egress {
+    description = "output from MySQL"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
