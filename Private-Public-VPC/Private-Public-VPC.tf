@@ -40,3 +40,52 @@ resource "aws_subnet" "subnet2" {
     Name = "Private Subnet"
   }
 }
+
+// Creating security group for webserver!
+resource "aws_security_group" "ISG" {
+
+  description = "HTTP, PING, SSH"
+  name = "Webserver-SG"
+  vpc_id = aws_vpc.custom.id
+
+  // Created an inbound rule for webserver
+  ingress {
+    description = "HTTP for webserver"
+    from_port   = 80
+    to_port     = 80
+
+    # Here adding tcp instead of http, because http in part of tcp only!
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  // Created an inbound rule for ping
+  ingress {
+    description = "Ping"
+    from_port   = 0
+    to_port     = 0
+
+    # Here adding tcp instead of http, because http in part of tcp only!
+    protocol    = "ICMP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  // Created an inbound rule for ping
+  ingress {
+    description = "SSH"
+    from_port   = 22
+    to_port     = 22
+
+    # Here adding tcp instead of http, because http in part of tcp only!
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "ouput from webserver"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
