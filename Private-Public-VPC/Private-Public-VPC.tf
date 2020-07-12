@@ -123,21 +123,20 @@ resource "aws_security_group" "MySQL-SG" {
     aws_vpc.custom,
     aws_subnet.subnet1,
     aws_subnet.subnet2,
-    aws_security_group.WS-SG,
-    aws_security_group.DB-SG-SSH
+    aws_security_group.WS-SG
   ]
 
   description = "MySQL Access only from the Webserver Instances!"
   name = "MySQL-SG"
   vpc_id = aws_vpc.custom.id
 
-  // Created an inbound rule for webserver
+  // Created an inbound rule for MySQL
   ingress {
     description = "MySQL Access"
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    security_groups = [aws_security_group.WS-SG.id, aws_security_group.DB-SG-SSH.id]
+    security_groups = [aws_security_group.WS-SG.id]
   }
 
   egress {
@@ -248,7 +247,7 @@ resource "aws_route_table_association" "RT-IG-Association" {
   route_table_id = aws_route_table.Public-Subnet-RT.id
 }
 
-/*
+
 // Creating an AWS instance for the Webserver!
 resource "aws_instance" "webserver" {
   ami = "ami-0162dd7febeafb455"
@@ -259,7 +258,6 @@ resource "aws_instance" "webserver" {
   key_name = aws_key_pair.Key-Pair.key_name
   security_groups =  [aws_security_group.WS-SG.name]
 
-  // user_data = file("init_conf.sh")
   tags = {
    Name = "Webserver_From_Terraform"
   }
@@ -278,7 +276,6 @@ resource "aws_instance" "MySQL" {
   // access for applying updates & patches!
   security_groups =  [aws_security_group.MySQL-SG.name, aws_security_group.DB-SG-SSH.name]
 
-  // user_data = file("init_conf.sh")
   tags = {
    Name = "MySQL_From_Terraform"
   }
@@ -294,9 +291,8 @@ resource "aws_instance" "Bastion-Host" {
   key_name = aws_key_pair.Key-Pair.key_name
   security_groups =  [aws_security_group.BH-SG.name]
 
-  // user_data = file("init_conf.sh")
   tags = {
    Name = "Bastion_Host_From_Terraform"
   }
 }
-*/
+
