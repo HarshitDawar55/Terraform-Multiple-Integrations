@@ -14,6 +14,7 @@ resource "aws_key_pair" "Key-Pair" {
 // Creating a VPC!
 resource "aws_vpc" "custom" {
   cidr_block = "57.95.0.0/16"
+  enable_dns_hostnames = true
   tags = {
     Name = "custom"
   }
