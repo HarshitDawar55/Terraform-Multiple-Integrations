@@ -21,8 +21,11 @@ resource "aws_vpc" "custom" {
 
 // Creating subnet 1
 resource "aws_subnet" "subnet1" {
+  depends_on = [
+    aws_vpc.custom
+  ]
   vpc_id = aws_vpc.custom.id
-  cidr_block = ["57.95.0.1/24"]
+  cidr_block = "57.95.0.1/24"
   availability_zone = "ap-south-1a"
 
   tags = {
@@ -32,8 +35,12 @@ resource "aws_subnet" "subnet1" {
 
 // Creating subnet 2
 resource "aws_subnet" "subnet2" {
+  depends_on = [
+    aws_vpc.custom,
+    aws_subnet.subnet1
+  ]
   vpc_id = aws_vpc.custom.id
-  cidr_block = ["57.95.1.1/24"]
+  cidr_block = "57.95.1.1/24"
   availability_zone = "ap-south-1b"
 
   tags = {
@@ -43,6 +50,11 @@ resource "aws_subnet" "subnet2" {
 
 // Creating an Internet Gateway for the VPC
 resource "aws_internet_gateway" "Internet_Gateway" {
+  depends_on = [
+    aws_vpc.custom,
+    aws_subnet.subnet1,
+    aws_subnet.subnet2
+  ]
   vpc_id = aws_vpc.custom.id
 
   tags = {
@@ -53,6 +65,12 @@ resource "aws_internet_gateway" "Internet_Gateway" {
 // Creating security group for webserver!  Note: This security group we will use to create the instances in the private subnet secure,
 // as the instances with this security group attached only have access to the private subnet.
 resource "aws_security_group" "WS-SG" {
+
+  depends_on = [
+    aws_vpc.custom,
+    aws_subnet.subnet1,
+    aws_subnet.subnet2
+  ]
 
   description = "HTTP, PING, SSH"
   name = "Webserver-SG"
@@ -101,6 +119,13 @@ resource "aws_security_group" "WS-SG" {
 // Creating security group for MySQL, this will allow access only from the instances having the security group created above.
 resource "aws_security_group" "MySQL-SG" {
 
+  depends_on = [
+    aws_vpc.custom,
+    aws_subnet.subnet1,
+    aws_subnet.subnet2,
+    aws_security_group.WS-SG
+  ]
+
   description = "MySQL Access only from the Webserver Instances!"
   name = "MySQL-SG"
   vpc_id = aws_vpc.custom.id
@@ -126,6 +151,12 @@ resource "aws_security_group" "MySQL-SG" {
 // Creating security group for Bastion Host/Jump Box
 resource "aws_security_group" "BH-SG" {
 
+  depends_on = [
+    aws_vpc.custom,
+    aws_subnet.subnet1,
+    aws_subnet.subnet2
+  ]
+
   description = "MySQL Access only from the Webserver Instances!"
   name = "MySQL-SG"
   vpc_id = aws_vpc.custom.id
@@ -140,7 +171,7 @@ resource "aws_security_group" "BH-SG" {
   }
 
   egress {
-    description = "output from MySQL"
+    description = "output from Bastion Host"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -150,6 +181,13 @@ resource "aws_security_group" "BH-SG" {
 
 // Creating security group for MySQL Bastion Host Access
 resource "aws_security_group" "DB-SG-SSH" {
+
+  depends_on = [
+    aws_vpc.custom,
+    aws_subnet.subnet1,
+    aws_subnet.subnet2,
+    aws_security_group.BH-SG
+  ]
 
   description = "MySQL Bastion host access for updates!"
   name = "MySQL-SG-BH"
@@ -165,7 +203,7 @@ resource "aws_security_group" "DB-SG-SSH" {
   }
 
   egress {
-    description = "output from MySQL"
+    description = "output from MySQL BH"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -175,6 +213,11 @@ resource "aws_security_group" "DB-SG-SSH" {
 
 // Creating an Route Table for the public subnet!
 resource "aws_route_table" "Public-Subnet-RT" {
+  depends_on = [
+    aws_vpc.custom,
+    aws_internet_gateway.Internet_Gateway
+  ]
+
   vpc_id = aws_vpc.custom.id
 
   route {
@@ -189,6 +232,14 @@ resource "aws_route_table" "Public-Subnet-RT" {
 
 // Creating a resource for the Route Table Association!
 resource "aws_route_table_association" "RT-IG-Association" {
+
+  depends_on = [
+    aws_vpc.custom,
+    aws_subnet.subnet1,
+    aws_subnet.subnet2,
+    aws_route_table.Public-Subnet-RT
+  ]
+
 //  Public Subnet ID
   subnet_id      = aws_subnet.subnet1.id
 
