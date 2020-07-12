@@ -123,7 +123,8 @@ resource "aws_security_group" "MySQL-SG" {
     aws_vpc.custom,
     aws_subnet.subnet1,
     aws_subnet.subnet2,
-    aws_security_group.WS-SG
+    aws_security_group.WS-SG,
+    aws_security_group.DB-SG-SSH
   ]
 
   description = "MySQL Access only from the Webserver Instances!"
@@ -136,7 +137,7 @@ resource "aws_security_group" "MySQL-SG" {
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"
-    security_groups = [aws_security_group.WS-SG.id]
+    security_groups = [aws_security_group.WS-SG.id, aws_security_group.DB-SG-SSH.id]
   }
 
   egress {
@@ -158,7 +159,7 @@ resource "aws_security_group" "BH-SG" {
   ]
 
   description = "MySQL Access only from the Webserver Instances!"
-  name = "MySQL-SG"
+  name = "BH-SG"
   vpc_id = aws_vpc.custom.id
 
   // Created an inbound rule for webserver
@@ -199,7 +200,7 @@ resource "aws_security_group" "DB-SG-SSH" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    security_groups = [aws_security_group.BH-SG.name]
+    security_groups = [aws_security_group.BH-SG.id]
   }
 
   egress {
@@ -247,7 +248,7 @@ resource "aws_route_table_association" "RT-IG-Association" {
   route_table_id = aws_route_table.Public-Subnet-RT.id
 }
 
-
+/*
 // Creating an AWS instance for the Webserver!
 resource "aws_instance" "webserver" {
   ami = "ami-0162dd7febeafb455"
@@ -298,4 +299,4 @@ resource "aws_instance" "Bastion-Host" {
    Name = "Bastion_Host_From_Terraform"
   }
 }
-
+*/
