@@ -27,12 +27,16 @@ resource "aws_subnet" "subnet1" {
   vpc_id = aws_vpc.custom.id
   cidr_block = "57.95.0.1/24"
   availability_zone = "ap-south-1a"
+  map_public_ip_on_launch = true
 
   tags = {
     Name = "Public Subnet"
   }
 }
 
+output Public-subnet{
+  value = aws_subnet.subnet1
+}
 // Creating subnet 2
 resource "aws_subnet" "subnet2" {
   depends_on = [
@@ -62,7 +66,44 @@ resource "aws_internet_gateway" "Internet_Gateway" {
   }
 }
 
-// Creating security group for webserver!  Note: This security group we will use to create the instances in the private subnet secure,
+// Creating an Route Table for the public subnet!
+resource "aws_route_table" "Public-Subnet-RT" {
+  depends_on = [
+    aws_vpc.custom,
+    aws_internet_gateway.Internet_Gateway
+  ]
+
+  vpc_id = aws_vpc.custom.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.Internet_Gateway.id
+  }
+
+  tags = {
+    Name = "Route Table for Internet Gateway"
+  }
+}
+
+// Creating a resource for the Route Table Association!
+resource "aws_route_table_association" "RT-IG-Association" {
+
+  depends_on = [
+    aws_vpc.custom,
+    aws_subnet.subnet1,
+    aws_subnet.subnet2,
+    aws_route_table.Public-Subnet-RT
+  ]
+
+//  Public Subnet ID
+  subnet_id      = aws_subnet.subnet1.id
+
+//  Route Table ID
+  route_table_id = aws_route_table.Public-Subnet-RT.id
+}
+
+
+/* Creating security group for webserver!  Note: This security group we will use to create the instances in the private subnet secure,
 // as the instances with this security group attached only have access to the private subnet.
 resource "aws_security_group" "WS-SG" {
 
@@ -211,42 +252,6 @@ resource "aws_security_group" "DB-SG-SSH" {
   }
 }
 
-// Creating an Route Table for the public subnet!
-resource "aws_route_table" "Public-Subnet-RT" {
-  depends_on = [
-    aws_vpc.custom,
-    aws_internet_gateway.Internet_Gateway
-  ]
-
-  vpc_id = aws_vpc.custom.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.Internet_Gateway.id
-  }
-
-  tags = {
-    Name = "Route Table for Internet Gateway"
-  }
-}
-
-// Creating a resource for the Route Table Association!
-resource "aws_route_table_association" "RT-IG-Association" {
-
-  depends_on = [
-    aws_vpc.custom,
-    aws_subnet.subnet1,
-    aws_subnet.subnet2,
-    aws_route_table.Public-Subnet-RT
-  ]
-
-//  Public Subnet ID
-  subnet_id      = aws_subnet.subnet1.id
-
-//  Route Table ID
-  route_table_id = aws_route_table.Public-Subnet-RT.id
-}
-
 
 // Creating an AWS instance for the Webserver!
 resource "aws_instance" "webserver" {
@@ -295,4 +300,4 @@ resource "aws_instance" "Bastion-Host" {
    Name = "Bastion_Host_From_Terraform"
   }
 }
-
+*/
