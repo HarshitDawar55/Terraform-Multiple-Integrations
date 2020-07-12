@@ -34,9 +34,6 @@ resource "aws_subnet" "subnet1" {
   }
 }
 
-output Public-subnet{
-  value = aws_subnet.subnet1
-}
 // Creating subnet 2
 resource "aws_subnet" "subnet2" {
   depends_on = [
@@ -103,7 +100,7 @@ resource "aws_route_table_association" "RT-IG-Association" {
 }
 
 
-/* Creating security group for webserver!  Note: This security group we will use to create the instances in the private subnet secure,
+// Creating security group for webserver!  Note: This security group we will use to create the instances in the private subnet secure,
 // as the instances with this security group attached only have access to the private subnet.
 resource "aws_security_group" "WS-SG" {
 
@@ -300,4 +297,4 @@ resource "aws_instance" "Bastion-Host" {
    Name = "Bastion_Host_From_Terraform"
   }
 }
-*/
+
