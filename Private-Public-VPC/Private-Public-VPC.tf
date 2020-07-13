@@ -299,3 +299,4 @@ resource "aws_instance" "Bastion-Host" {
   }
 }
 
+// Creating an output variable which will print the private IP of MySQL EC2 instance
