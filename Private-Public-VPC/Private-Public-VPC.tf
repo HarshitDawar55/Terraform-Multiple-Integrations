@@ -300,3 +300,6 @@ resource "aws_instance" "Bastion-Host" {
 }
 
 // Creating an output variable which will print the private IP of MySQL EC2 instance
+output "MySQL-Private-IP" {
+  value = aws_instance.MySQL.private_ip
+}
