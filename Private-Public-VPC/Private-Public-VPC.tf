@@ -264,6 +264,26 @@ resource "aws_instance" "webserver" {
   tags = {
    Name = "Webserver_From_Terraform"
   }
+
+  // Installing required softwares into the system!
+  connection {
+    type = "ssh"
+    user = "ec2-user"
+    private_key = file("~/Downloads/GeneralKey.pem")
+    host = aws_instance.webserver.public_ip
+  }
+
+  // Code for Mounting the drive
+  provisioner "remote-exec" {
+    inline = [
+        "sudo yum update -y",
+        "sudo yum install php php-mysqlnd httpd -y",
+        "service mysqld start",
+        "service httpd start",
+        "chkconfig mysqld on",
+        "chkconfig httpd on"
+    ]
+  }
 }
 
 // Creating an AWS instance for the MySQL! It should be launched in the private subnet!
