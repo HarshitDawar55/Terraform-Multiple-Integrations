@@ -273,14 +273,12 @@ resource "aws_instance" "webserver" {
     host = aws_instance.webserver.public_ip
   }
 
-  // Code for Mounting the drive
+  // Code for installing the softwares!
   provisioner "remote-exec" {
     inline = [
         "sudo yum update -y",
         "sudo yum install php php-mysqlnd httpd -y",
-        "service mysqld start",
         "service httpd start",
-        "chkconfig mysqld on",
         "chkconfig httpd on"
     ]
   }
@@ -301,6 +299,24 @@ resource "aws_instance" "MySQL" {
 
   tags = {
    Name = "MySQL_From_Terraform"
+  }
+
+  // Installing required softwares into the system!
+  connection {
+    type = "ssh"
+    user = "ec2-user"
+    private_key = file("~/Downloads/GeneralKey.pem")
+    host = aws_instance.MySQL.public_ip
+  }
+
+  // Code for installing the softwares.
+  provisioner "remote-exec" {
+    inline = [
+        "sudo yum update -y",
+        "sudo yum install mysql php-mysqlnd -y",
+        "service mysqld start",
+        "chkconfig mysqld on"
+    ]
   }
 }
 
