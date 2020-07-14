@@ -270,7 +270,7 @@ resource "aws_instance" "webserver" {
   // Here I am providing the name of the key which is already uploaded on the AWS console. Here the created key pair will
   //not work because there is more than 1 key pair present in the aws console!
   key_name = "MyKeyFinal"
-  security_groups =  [aws_security_group.WS-SG.name]
+  security_groups =  [aws_security_group.WS-SG.id]
 
   tags = {
    Name = "Webserver_From_Terraform"
@@ -292,9 +292,9 @@ resource "aws_instance" "webserver" {
         "wget https://wordpress.org/wordpress-4.8.14.tar.gz",
         "tar -xzf wordpress-4.8.14.tar.gz",
         "sudo cp -r wordpress /var/www/html/",
+        "sudo chown -R apache.apache /var/www/html/wordpress",
         "sudo systemctl start httpd",
-        "sudo systemctl enable httpd",
-        "sudo chown -R apache.apache /var/www/html/wordpress"
+        "sudo systemctl enable httpd"
     ]
   }
 }
@@ -313,7 +313,7 @@ resource "aws_instance" "MySQL" {
 
   // Attaching 2 security groups here, 1 for the MySQL Database access by the Web-servers, & other one for the Bastion Host
   // access for applying updates & patches!
-  security_groups =  [aws_security_group.MySQL-SG.name, aws_security_group.DB-SG-SSH.name]
+  security_groups =  [aws_security_group.MySQL-SG.id, aws_security_group.DB-SG-SSH.id]
 
   tags = {
    Name = "MySQL_From_Terraform"
@@ -336,7 +336,7 @@ resource "aws_instance" "Bastion-Host" {
 
   // Keyname and security group are obtained from the reference of their instances created above!
   key_name = "MyKeyFinal"
-  security_groups =  [aws_security_group.BH-SG.name]
+  security_groups =  [aws_security_group.BH-SG.id]
 
   tags = {
    Name = "Bastion_Host_From_Terraform"
@@ -351,4 +351,8 @@ output "MySQL-Private-IP" {
 // Creating an output variable which will print the public IP of Webserver EC2 instance!
 output "Webserver-Public-IP" {
   value = aws_instance.webserver.public_ip
+}
+
+output "BastionHost-Public-IP" {
+  value = aws_instance.Bastion-Host.public_ip
 }
