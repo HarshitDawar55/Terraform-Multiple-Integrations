@@ -305,7 +305,7 @@ resource "aws_instance" "MySQL" {
   subnet_id = aws_subnet.subnet2.id
 
   // Keyname and security group are obtained from the reference of their instances created above!
-  key_name = aws_key_pair.Key-Pair.key_name
+  key_name = "MyKeyFinal"
 
   // Attaching 2 security groups here, 1 for the MySQL Database access by the Web-servers, & other one for the Bastion Host
   // access for applying updates & patches!
@@ -319,7 +319,7 @@ resource "aws_instance" "MySQL" {
   connection {
     type = "ssh"
     user = "ec2-user"
-    private_key = file("~/Downloads/GeneralKey.pem")
+    private_key = file("/Users/harshitdawar/Github/AWS-CLI/MyKeyFinal.pem")
     host = aws_instance.MySQL.public_ip
   }
 
@@ -328,8 +328,8 @@ resource "aws_instance" "MySQL" {
     inline = [
         "sudo yum update -y",
         "sudo yum install mysql php-mysqlnd -y",
-        "service mysqld start",
-        "chkconfig mysqld on"
+        "sudo systemctl strat mysqld",
+        "sudo systemctl enable mysqld"
     ]
   }
 }
