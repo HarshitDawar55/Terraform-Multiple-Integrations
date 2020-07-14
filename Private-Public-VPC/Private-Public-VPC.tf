@@ -306,7 +306,9 @@ resource "aws_instance" "MySQL" {
   depends_on = [
     aws_instance.webserver,
   ]
-  ami = "ami-0162dd7febeafb455"
+
+  // Using my custom Private AMI which has everything configured for WordPress!
+  ami = "ami-0f70942519a84d179"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.subnet2.id
 
@@ -317,9 +319,6 @@ resource "aws_instance" "MySQL" {
   // access for applying updates & patches!
 //  security_groups =  [aws_security_group.MySQL-SG.id, aws_security_group.DB-SG-SSH.id]
   vpc_security_group_ids = [aws_security_group.MySQL-SG.id, aws_security_group.DB-SG-SSH.id]
-
-  // Installing required softwares into the system!
-  user_data = file("/Users/harshitdawar/Github/Terraform-Multiple-Integrations/Private-Public-VPC/mysql-install.sh")
 
   tags = {
    Name = "MySQL_From_Terraform"
