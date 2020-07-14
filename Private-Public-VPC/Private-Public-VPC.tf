@@ -292,7 +292,7 @@ resource "aws_instance" "webserver" {
         "wget https://wordpress.org/wordpress-4.8.14.tar.gz",
         "tar -xzf wordpress-4.8.14.tar.gz",
         "sudo cp -r wordpress /var/www/html/",
-        "sudo chown -R apache.apache /var/www/html/wordpress",
+        "sudo chown -R apache.apache /var/www/html/",
         "sudo systemctl start httpd",
         "sudo systemctl enable httpd"
     ]
