@@ -315,7 +315,11 @@ resource "aws_instance" "MySQL" {
    Name = "MySQL_From_Terraform"
   }
 
+  // Doing a remote connection from here is not possible because in the security group we have not allowed SSH from everywhere, it is only allowed from the webserver instances.
+
   // Installing required softwares into the system!
+  user_data =
+
   connection {
     type = "ssh"
     user = "ec2-user"
