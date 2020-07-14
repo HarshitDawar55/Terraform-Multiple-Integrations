@@ -135,7 +135,7 @@ resource "aws_security_group" "WS-SG" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  // Created an inbound rule for ping
+  // Created an inbound rule for SSH
   ingress {
     description = "SSH"
     from_port   = 22
@@ -200,7 +200,7 @@ resource "aws_security_group" "BH-SG" {
   name = "bastion-host-sg"
   vpc_id = aws_vpc.custom.id
 
-  // Created an inbound rule for webserver
+  // Created an inbound rule for Bastion Host SSH
   ingress {
     description = "Bastion Host SG"
     from_port   = 22
