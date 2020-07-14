@@ -363,4 +363,5 @@ output "BastionHost-Public-IP" {
 }
 
 // Use this command to copy the key from local to ec2. [Make sure to copy in a directory to which the user has the access].
-//scp -i MyKeyFinal.pem <complete path to the Key> <URL of ec2 instance>:/home/ec2-user
+// scp -i MyKeyFinal.pem <complete path to the Key> <URL of ec2 instance>:/home/ec2-user
+// Another Example: scp -i MyKeyFinal.pem MyKeyFinal.pem ec2-user@13.127.180.20:/home/ec2-user/
