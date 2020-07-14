@@ -270,7 +270,8 @@ resource "aws_instance" "webserver" {
   // Here I am providing the name of the key which is already uploaded on the AWS console. Here the created key pair will
   //not work because there is more than 1 key pair present in the aws console!
   key_name = "MyKeyFinal"
-  security_groups =  [aws_security_group.WS-SG.id]
+//  security_groups =  [aws_security_group.WS-SG.id]
+  vpc_security_group_ids = [aws_security_group.WS-SG.id]
 
   tags = {
    Name = "Webserver_From_Terraform"
@@ -294,7 +295,8 @@ resource "aws_instance" "webserver" {
         "sudo cp -r wordpress /var/www/html/",
         "sudo chown -R apache.apache /var/www/html/",
         "sudo systemctl start httpd",
-        "sudo systemctl enable httpd"
+        "sudo systemctl enable httpd",
+        "sudo systemctl restart httpd"
     ]
   }
 }
@@ -313,7 +315,8 @@ resource "aws_instance" "MySQL" {
 
   // Attaching 2 security groups here, 1 for the MySQL Database access by the Web-servers, & other one for the Bastion Host
   // access for applying updates & patches!
-  security_groups =  [aws_security_group.MySQL-SG.id, aws_security_group.DB-SG-SSH.id]
+//  security_groups =  [aws_security_group.MySQL-SG.id, aws_security_group.DB-SG-SSH.id]
+  vpc_security_group_ids = [aws_security_group.MySQL-SG.id, aws_security_group.DB-SG-SSH.id]
 
   tags = {
    Name = "MySQL_From_Terraform"
@@ -336,8 +339,8 @@ resource "aws_instance" "Bastion-Host" {
 
   // Keyname and security group are obtained from the reference of their instances created above!
   key_name = "MyKeyFinal"
-  security_groups =  [aws_security_group.BH-SG.id]
-
+//  security_groups =  [aws_security_group.BH-SG.id]
+  vpc_security_group_ids = [aws_security_group.BH-SG.id]
   tags = {
    Name = "Bastion_Host_From_Terraform"
   }
@@ -357,3 +360,6 @@ output "Webserver-Public-IP" {
 output "BastionHost-Public-IP" {
   value = aws_instance.Bastion-Host.public_ip
 }
+
+// Use this command to copy the key from local to ec2. [Make sure to copy in a directory to which the user has the access].
+//scp -i MyKeyFinal.pem <complete path to the Key> <URL of ec2 instance>:/home/ec2-user
