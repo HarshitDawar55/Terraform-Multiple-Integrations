@@ -353,6 +353,7 @@ output "Webserver-Public-IP" {
   value = aws_instance.webserver.public_ip
 }
 
+// Creating an output variable which will print the public IP of Bastion Host EC2 instance!
 output "BastionHost-Public-IP" {
   value = aws_instance.Bastion-Host.public_ip
 }
