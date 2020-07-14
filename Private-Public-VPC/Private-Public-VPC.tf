@@ -289,8 +289,12 @@ resource "aws_instance" "webserver" {
     inline = [
         "sudo yum update -y",
         "sudo yum install php php-mysqlnd httpd -y",
+        "wget https://wordpress.org/wordpress-4.8.14.tar.gz",
+        "tar -xzf wordpress-4.8.14.tar.gz",
+        "sudo cp -r wordpress /var/www/html/",
         "sudo systemctl start httpd",
-        "sudo systemctl enable httpd"
+        "sudo systemctl enable httpd",
+        "sudo chown -R apache.apache /var/www/html/wordpress"
     ]
   }
 }
@@ -316,26 +320,8 @@ resource "aws_instance" "MySQL" {
   }
 
   // Doing a remote connection from here is not possible because in the security group we have not allowed SSH from everywhere, it is only allowed from the webserver instances.
-
   // Installing required softwares into the system!
-  user_data =
-
-  connection {
-    type = "ssh"
-    user = "ec2-user"
-    private_key = file("/Users/harshitdawar/Github/AWS-CLI/MyKeyFinal.pem")
-    host = aws_instance.MySQL.public_ip
-  }
-
-  // Code for installing the softwares.
-  provisioner "remote-exec" {
-    inline = [
-        "sudo yum update -y",
-        "sudo yum install mysql php-mysqlnd -y",
-        "sudo systemctl strat mysqld",
-        "sudo systemctl enable mysqld"
-    ]
-  }
+  user_data = file("~/Github/Terraform-Multiple-Integrations/Private-Public-VPC/mysql-install.sh")
 }
 
 // Creating an AWS instance for the Bastion Host, It should be launched in the public Subnet!
