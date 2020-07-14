@@ -112,7 +112,7 @@ resource "aws_security_group" "WS-SG" {
   ]
 
   description = "HTTP, PING, SSH"
-  name = "Webserver-SG"
+  name = "webserver-sg"
   vpc_id = aws_vpc.custom.id
 
   // Created an inbound rule for webserver
@@ -166,7 +166,7 @@ resource "aws_security_group" "MySQL-SG" {
   ]
 
   description = "MySQL Access only from the Webserver Instances!"
-  name = "MySQL-SG"
+  name = "mysql-sg"
   vpc_id = aws_vpc.custom.id
 
   // Created an inbound rule for MySQL
@@ -197,7 +197,7 @@ resource "aws_security_group" "BH-SG" {
   ]
 
   description = "MySQL Access only from the Webserver Instances!"
-  name = "BH-SG"
+  name = "bastion-host-sg"
   vpc_id = aws_vpc.custom.id
 
   // Created an inbound rule for webserver
@@ -229,7 +229,7 @@ resource "aws_security_group" "DB-SG-SSH" {
   ]
 
   description = "MySQL Bastion host access for updates!"
-  name = "MySQL-SG-BH"
+  name = "mysql-sg-bastion-host"
   vpc_id = aws_vpc.custom.id
 
   // Created an inbound rule for MySQL Bastion Host
@@ -270,7 +270,7 @@ resource "aws_instance" "webserver" {
   // Here I am providing the name of the key which is already uploaded on the AWS console. Here the created key pair will
   //not work because there is more than 1 key pair present in the aws console!
   key_name = "MyKeyFinal"
-  security_groups =  [aws_security_group.WS-SG.id]
+  security_groups =  [aws_security_group.WS-SG.name]
 
   tags = {
    Name = "Webserver_From_Terraform"
@@ -313,7 +313,7 @@ resource "aws_instance" "MySQL" {
 
   // Attaching 2 security groups here, 1 for the MySQL Database access by the Web-servers, & other one for the Bastion Host
   // access for applying updates & patches!
-  security_groups =  [aws_security_group.MySQL-SG.id, aws_security_group.DB-SG-SSH.id]
+  security_groups =  [aws_security_group.MySQL-SG.name, aws_security_group.DB-SG-SSH.name]
 
   tags = {
    Name = "MySQL_From_Terraform"
@@ -336,7 +336,7 @@ resource "aws_instance" "Bastion-Host" {
 
   // Keyname and security group are obtained from the reference of their instances created above!
   key_name = "MyKeyFinal"
-  security_groups =  [aws_security_group.BH-SG.id]
+  security_groups =  [aws_security_group.BH-SG.name]
 
   tags = {
    Name = "Bastion_Host_From_Terraform"
