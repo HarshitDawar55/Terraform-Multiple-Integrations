@@ -335,7 +335,7 @@ resource "aws_instance" "Bastion-Host" {
   subnet_id = aws_subnet.subnet1.id
 
   // Keyname and security group are obtained from the reference of their instances created above!
-  key_name = aws_key_pair.Key-Pair.key_name
+  key_name = "MyKeyFinal"
   security_groups =  [aws_security_group.BH-SG.id]
 
   tags = {
