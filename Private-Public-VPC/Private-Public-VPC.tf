@@ -8,12 +8,12 @@ provider "aws" {
 // Creating a New Key
 resource "aws_key_pair" "Key-Pair" {
   key_name   = "Integration-Key"
-  public_key = file("~/.ssh/id_rsa.pub")
+  public_key = file("~/.ssh/authorized_keys")
   }
 
 // Creating a VPC!
 resource "aws_vpc" "custom" {
-  cidr_block = "57.95.0.0/16"
+  cidr_block = "192.168.0.0/16"
   enable_dns_hostnames = true
   tags = {
     Name = "custom"
@@ -26,7 +26,7 @@ resource "aws_subnet" "subnet1" {
     aws_vpc.custom
   ]
   vpc_id = aws_vpc.custom.id
-  cidr_block = "57.95.0.1/24"
+  cidr_block = "192.168.0.0/24"
   availability_zone = "ap-south-1a"
   map_public_ip_on_launch = true
 
@@ -42,7 +42,7 @@ resource "aws_subnet" "subnet2" {
     aws_subnet.subnet1
   ]
   vpc_id = aws_vpc.custom.id
-  cidr_block = "57.95.1.1/24"
+  cidr_block = "192.168.1.0/24"
   availability_zone = "ap-south-1b"
 
   tags = {
@@ -253,12 +253,21 @@ resource "aws_security_group" "DB-SG-SSH" {
 
 // Creating an AWS instance for the Webserver!
 resource "aws_instance" "webserver" {
+
+  depends_on = [
+    aws_vpc.custom,
+    aws_subnet.subnet1,
+    aws_subnet.subnet2,
+    aws_security_group.BH-SG,
+    aws_security_group.DB-SG-SSH
+  ]
+
   ami = "ami-0162dd7febeafb455"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.subnet1.id
 
   // Keyname and security group are obtained from the reference of their instances created above!
-  key_name = aws_key_pair.Key-Pair.key_name
+  key_name = "MyKeyFinal"
   security_groups =  [aws_security_group.WS-SG.id]
 
   tags = {
@@ -269,7 +278,7 @@ resource "aws_instance" "webserver" {
   connection {
     type = "ssh"
     user = "ec2-user"
-    private_key = file("~/Downloads/GeneralKey.pem")
+    private_key = file("/Users/harshitdawar/Github/AWS-CLI/MyKeyFinal.pem")
     host = aws_instance.webserver.public_ip
   }
 
@@ -278,14 +287,17 @@ resource "aws_instance" "webserver" {
     inline = [
         "sudo yum update -y",
         "sudo yum install php php-mysqlnd httpd -y",
-        "service httpd start",
-        "chkconfig httpd on"
+        "sudo systemctl start httpd",
+        "sudo systemctl enable httpd"
     ]
   }
 }
 
 // Creating an AWS instance for the MySQL! It should be launched in the private subnet!
 resource "aws_instance" "MySQL" {
+  depends_on = [
+    aws_instance.webserver,
+  ]
   ami = "ami-0162dd7febeafb455"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.subnet2.id
@@ -322,6 +334,10 @@ resource "aws_instance" "MySQL" {
 
 // Creating an AWS instance for the Bastion Host, It should be launched in the public Subnet!
 resource "aws_instance" "Bastion-Host" {
+   depends_on = [
+    aws_instance.webserver,
+     aws_instance.MySQL
+  ]
   ami = "ami-0162dd7febeafb455"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.subnet1.id
@@ -335,7 +351,7 @@ resource "aws_instance" "Bastion-Host" {
   }
 }
 
-// Creating an output variable which will print the private IP of MySQL EC2 instance
+// Creating an output variable which will print the private IP of MySQL EC2 instance!
 output "MySQL-Private-IP" {
   value = aws_instance.MySQL.private_ip
 }
