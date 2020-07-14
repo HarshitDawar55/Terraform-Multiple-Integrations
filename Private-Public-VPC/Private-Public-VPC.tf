@@ -267,6 +267,8 @@ resource "aws_instance" "webserver" {
   subnet_id = aws_subnet.subnet1.id
 
   // Keyname and security group are obtained from the reference of their instances created above!
+  // Here I am providing the name of the key which is already uploaded on the AWS console. Here the created key pair will
+  //not work because there is more than 1 key pair present in the aws console!
   key_name = "MyKeyFinal"
   security_groups =  [aws_security_group.WS-SG.id]
 
