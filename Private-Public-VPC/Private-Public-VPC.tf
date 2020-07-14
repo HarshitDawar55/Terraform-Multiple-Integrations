@@ -318,13 +318,14 @@ resource "aws_instance" "MySQL" {
 //  security_groups =  [aws_security_group.MySQL-SG.id, aws_security_group.DB-SG-SSH.id]
   vpc_security_group_ids = [aws_security_group.MySQL-SG.id, aws_security_group.DB-SG-SSH.id]
 
+  // Installing required softwares into the system!
+  user_data = file("/Users/harshitdawar/Github/Terraform-Multiple-Integrations/Private-Public-VPC/mysql-install.sh")
+
   tags = {
    Name = "MySQL_From_Terraform"
   }
-
-  // Doing a remote connection from here is not possible because in the security group we have not allowed SSH from everywhere, it is only allowed from the webserver instances.
-  // Installing required softwares into the system!
-  user_data = file("~/Github/Terraform-Multiple-Integrations/Private-Public-VPC/mysql-install.sh")
+  // Doing a remote connection from here is not possible because in the security group we have not allowed SSH from everywhere,
+//  it is only allowed from the webserver instances.
 }
 
 // Creating an AWS instance for the Bastion Host, It should be launched in the public Subnet!
