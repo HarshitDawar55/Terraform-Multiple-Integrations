@@ -347,3 +347,8 @@ resource "aws_instance" "Bastion-Host" {
 output "MySQL-Private-IP" {
   value = aws_instance.MySQL.private_ip
 }
+
+// Creating an output variable which will print the public IP of Webserver EC2 instance!
+output "Webserver-Public-IP" {
+  value = aws_instance.webserver.public_ip
+}
