@@ -129,6 +129,16 @@ resource "aws_route_table" "NAT-Gateway-RT" {
   ]
 
   vpc_id = aws_vpc.custom.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.NAT_GATEWAY.id
+  }
+
+  tags = {
+    Name = "Route Table for NAT Gateway"
+  }
+
 }
 
 // Creating security group for webserver!  Note: This security group we will use to create the instances in the private subnet secure,
