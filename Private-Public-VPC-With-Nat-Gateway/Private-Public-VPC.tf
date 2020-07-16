@@ -255,6 +255,15 @@ resource "aws_eip" "Nat-Gateway-EIP" {
   vpc = true
 }
 
+// Creating a NAT Gateway!
+resource "aws_nat_gateway" "NAT_GATEWAY" {
+  allocation_id = aws_eip.Nat-Gateway-EIP.id
+  subnet_id = aws_subnet.subnet1.id
+  tags = {
+    Name = "Nat-Gateway_Project"
+  }
+}
+
 
 
 // Creating an AWS instance for the Webserver!
