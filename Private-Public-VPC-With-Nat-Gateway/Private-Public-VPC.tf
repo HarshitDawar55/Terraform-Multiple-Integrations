@@ -100,6 +100,17 @@ resource "aws_route_table_association" "RT-IG-Association" {
   route_table_id = aws_route_table.Public-Subnet-RT.id
 }
 
+// Creating an Elastic IP for the NAT Gateway!
+resource "aws_eip" "Nat-Gateway-EIP" {
+  depends_on = [
+    aws_vpc.custom,
+    aws_subnet.subnet1,
+    aws_subnet.subnet2,
+    aws_route_table.Public-Subnet-RT
+  ]
+
+  vpc = true
+}
 
 // Creating security group for webserver!  Note: This security group we will use to create the instances in the private subnet secure,
 // as the instances with this security group attached only have access to the private subnet.
@@ -250,10 +261,6 @@ resource "aws_security_group" "DB-SG-SSH" {
   }
 }
 
-// Creating an Elastic IP for the NAT Gateway!
-resource "aws_eip" "Nat-Gateway-EIP" {
-  vpc = true
-}
 
 // Creating a NAT Gateway!
 resource "aws_nat_gateway" "NAT_GATEWAY" {
