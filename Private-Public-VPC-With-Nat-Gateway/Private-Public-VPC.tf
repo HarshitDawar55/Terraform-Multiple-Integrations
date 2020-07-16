@@ -141,6 +141,19 @@ resource "aws_route_table" "NAT-Gateway-RT" {
 
 }
 
+// Creating an Route Table Association of the NAT Gateway route table with the Private Subnet!
+resource "aws_route_table_association" "Nat-Gateway-RT-Association" {
+  depends_on = [
+    aws_route_table.NAT-Gateway-RT
+  ]
+
+//  Private Subnet ID
+  subnet_id      = aws_subnet.subnet2.id
+
+//  Route Table ID
+  route_table_id = aws_route_table.NAT-Gateway-RT.id
+}
+
 // Creating security group for webserver!  Note: This security group we will use to create the instances in the private subnet secure,
 // as the instances with this security group attached only have access to the private subnet.
 resource "aws_security_group" "WS-SG" {
