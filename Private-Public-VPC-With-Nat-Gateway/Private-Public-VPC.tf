@@ -250,6 +250,12 @@ resource "aws_security_group" "DB-SG-SSH" {
   }
 }
 
+// Creating an Elastic IP for the NAT Gateway!
+resource "aws_eip" "Nat-Gateway-EIP" {
+  vpc = true
+}
+
+
 
 // Creating an AWS instance for the Webserver!
 resource "aws_instance" "webserver" {
