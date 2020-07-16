@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "ap-south-1"
+  region = "us-east-1"
 
   // Assign the profile name here!
   profile = "default"
@@ -27,7 +27,7 @@ resource "aws_subnet" "subnet1" {
   ]
   vpc_id = aws_vpc.custom.id
   cidr_block = "192.168.0.0/24"
-  availability_zone = "ap-south-1a"
+  availability_zone = "us-east-1a"
   map_public_ip_on_launch = true
 
   tags = {
@@ -43,7 +43,7 @@ resource "aws_subnet" "subnet2" {
   ]
   vpc_id = aws_vpc.custom.id
   cidr_block = "192.168.1.0/24"
-  availability_zone = "ap-south-1b"
+  availability_zone = "us-east-1b"
 
   tags = {
     Name = "Private Subnet"
