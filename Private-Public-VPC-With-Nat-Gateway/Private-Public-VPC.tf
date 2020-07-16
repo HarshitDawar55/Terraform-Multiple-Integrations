@@ -112,6 +112,25 @@ resource "aws_eip" "Nat-Gateway-EIP" {
   vpc = true
 }
 
+// Creating a NAT Gateway!
+resource "aws_nat_gateway" "NAT_GATEWAY" {
+  depends_on = [
+    aws_vpc.custom,
+    aws_subnet.subnet1,
+    aws_subnet.subnet2,
+    aws_route_table.Public-Subnet-RT,
+    aws_eip.Nat-Gateway-EIP
+  ]
+
+  allocation_id = aws_eip.Nat-Gateway-EIP.id
+  subnet_id = aws_subnet.subnet1.id
+  tags = {
+    Name = "Nat-Gateway_Project"
+  }
+}
+
+
+
 // Creating security group for webserver!  Note: This security group we will use to create the instances in the private subnet secure,
 // as the instances with this security group attached only have access to the private subnet.
 resource "aws_security_group" "WS-SG" {
@@ -260,17 +279,6 @@ resource "aws_security_group" "DB-SG-SSH" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-
-// Creating a NAT Gateway!
-resource "aws_nat_gateway" "NAT_GATEWAY" {
-  allocation_id = aws_eip.Nat-Gateway-EIP.id
-  subnet_id = aws_subnet.subnet1.id
-  tags = {
-    Name = "Nat-Gateway_Project"
-  }
-}
-
 
 
 // Creating an AWS instance for the Webserver!
