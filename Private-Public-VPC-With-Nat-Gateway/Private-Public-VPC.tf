@@ -366,7 +366,7 @@ resource "aws_instance" "MySQL" {
   subnet_id = aws_subnet.subnet2.id
 
   // Keyname and security group are obtained from the reference of their instances created above!
-  key_name = "MyKeyFinal"
+  key_name = "GeneralKey"
 
   // Attaching 2 security groups here, 1 for the MySQL Database access by the Web-servers, & other one for the Bastion Host
   // access for applying updates & patches!
