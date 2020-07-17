@@ -386,7 +386,7 @@ resource "aws_instance" "Bastion-Host" {
     aws_instance.webserver,
      aws_instance.MySQL
   ]
-  ami = "ami-0162dd7febeafb455"
+  ami = "ami-0e9089763828757e1"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.subnet1.id
 
