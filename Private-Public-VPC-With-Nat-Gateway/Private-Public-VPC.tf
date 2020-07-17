@@ -322,7 +322,7 @@ resource "aws_instance" "webserver" {
   // Keyname and security group are obtained from the reference of their instances created above!
   // Here I am providing the name of the key which is already uploaded on the AWS console. Here the created key pair will
   //not work because there is more than 1 key pair present in the aws console!
-  key_name = "MyKeyFinal"
+  key_name = "GeneralKey"
 //  security_groups =  [aws_security_group.WS-SG.id]
   vpc_security_group_ids = [aws_security_group.WS-SG.id]
 
@@ -334,7 +334,7 @@ resource "aws_instance" "webserver" {
   connection {
     type = "ssh"
     user = "ec2-user"
-    private_key = file("/Users/harshitdawar/Github/AWS-CLI/MyKeyFinal.pem")
+    private_key = file("/Users/harshitdawar/Downloads/GeneralKey.pem")
     host = aws_instance.webserver.public_ip
   }
 
