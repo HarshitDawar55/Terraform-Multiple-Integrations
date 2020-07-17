@@ -315,7 +315,7 @@ resource "aws_instance" "webserver" {
     aws_security_group.DB-SG-SSH
   ]
 
-  ami = "ami-0162dd7febeafb455"
+  ami = "ami-0c302eb6b698aa47e"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.subnet1.id
 
