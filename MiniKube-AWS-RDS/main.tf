@@ -4,15 +4,15 @@ provider "kubernetes" {
 
 resource "kubernetes_deployment" "Webserver-Deployment" {
   metadata {
-    name = "Webserver_Deployment"
+    name = "webserver-deployment"
     labels = {
       App = "Webserver"
     }
   }
   spec {
     replicas = var.replicas
-    strategy =  {
-      name = var.K8-Strategy
+    strategy {
+      type = var.K8-Strategy
     }
     selector {
       match_labels = {
