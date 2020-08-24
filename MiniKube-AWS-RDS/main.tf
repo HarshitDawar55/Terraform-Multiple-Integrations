@@ -1,7 +1,9 @@
+// It is required for the Kubernetes services/functionalities!
 provider "kubernetes" {
   config_context_cluster = var.cluster-name
 }
 
+// It is required for the aws functionalities, to be specific, RDS in the present scenario!
 provider "aws" {
   region = "ap-south-1"
 
