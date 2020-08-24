@@ -1,5 +1,5 @@
 provider "kubernetes" {
-  config_context_cluster = "minikube"
+  config_context_cluster = var.cluster-name
 }
 
 resource "kubernetes_deployment" "Webserver-Deployment" {
@@ -7,9 +7,9 @@ resource "kubernetes_deployment" "Webserver-Deployment" {
     name = "Webserver_Deployment"
   }
   spec {
-    replicas = 3
+    replicas = var.replicas
     strategy {
-      name = "rolling-update"
+      name = var.K8-Strategy
     }
     selector {
       env = "Production",
@@ -28,7 +28,7 @@ resource "kubernetes_deployment" "Webserver-Deployment" {
         // Deploying a WordPress container!
         container {
           name = "Webserver"
-          image = "wordpress"
+          image = var.image
         }
       }
     }
