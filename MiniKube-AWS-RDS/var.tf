@@ -4,7 +4,7 @@ variable "K8-Strategy" {
 
 variable "replicas" {
   type = number
-  default = 3
+  default = 1
 }
 
 variable "cluster-name" {
