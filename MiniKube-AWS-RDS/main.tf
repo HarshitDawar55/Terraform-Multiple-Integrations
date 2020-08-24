@@ -2,6 +2,13 @@ provider "kubernetes" {
   config_context_cluster = var.cluster-name
 }
 
+provider "aws" {
+  region = "ap-south-1"
+
+  // Assign the profile name here!
+  profile = "default"
+}
+
 resource "kubernetes_deployment" "Webserver-Deployment" {
   metadata {
     name = "webserver-deployment"
