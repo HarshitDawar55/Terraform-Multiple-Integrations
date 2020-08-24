@@ -12,15 +12,15 @@ resource "kubernetes_deployment" "Webserver-Deployment" {
       name = var.K8-Strategy
     }
     selector {
-      env = "Production",
-      type = "webserver",
+      env = "Production"
+      type = "webserver"
       dc = "India"
     }
     template {
       metadata {
         labels = {
-          env = "Production",
-          type = "webserver",
+          env = "Production"
+          type = "webserver"
           dc = "India"
         }
       }
