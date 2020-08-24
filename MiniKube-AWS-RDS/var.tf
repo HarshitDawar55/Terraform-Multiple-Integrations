@@ -1,5 +1,5 @@
 variable "K8-Strategy" {
-  default = "rolling-update"
+  default = "RollingUpdate"
 }
 
 variable "replicas" {
