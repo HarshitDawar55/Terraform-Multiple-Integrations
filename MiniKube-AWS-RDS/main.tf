@@ -74,16 +74,19 @@ resource "kubernetes_service" "WordPress" {
 
 // Creating an RDS AWS Resource
 resource "aws_db_instance" "WordPress-RDS" {
-  allocated_storage    = 1
-  max_allocated_storage = 5
+  allocated_storage    = 5
+  max_allocated_storage = 7
   storage_type         = "gp2"
   engine               = "mysql"
-  engine_version       = "8.0.17"
+  engine_version       = "5.7"
   instance_class       = "db.t2.micro"
-  name                 = "WordPress-DB"
-  username             = "HarshitDawar"
-  password             = "HarshitDawar"
-  parameter_group_name = "default.mysql8.0"
+  // Name of the Database to be created
+  identifier           = "wordpressdb"
+  name                 = "wordpress"
+  username             = "harshitdawar"
+  password             = "harshitdawar12345"
+  parameter_group_name = "default.mysql5.7"
+  skip_final_snapshot = true
   port = 3306
   publicly_accessible = true
 
@@ -92,4 +95,8 @@ resource "aws_db_instance" "WordPress-RDS" {
 
   // Deleting Automated Backups
   delete_automated_backups = true
+}
+
+output "RDS-Instance" {
+  value = aws_db_instance.WordPress-RDS.address
 }
