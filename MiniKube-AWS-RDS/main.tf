@@ -5,16 +5,21 @@ provider "kubernetes" {
 resource "kubernetes_deployment" "Webserver-Deployment" {
   metadata {
     name = "Webserver_Deployment"
+    labels = {
+      App = "Webserver"
+    }
   }
   spec {
     replicas = var.replicas
-    strategy {
+    strategy =  {
       name = var.K8-Strategy
     }
     selector {
-      env = "Production"
-      type = "webserver"
-      dc = "India"
+      match_labels = {
+        env = "Production"
+        type = "webserver"
+        dc = "India"
+      }
     }
     template {
       metadata {
@@ -29,6 +34,9 @@ resource "kubernetes_deployment" "Webserver-Deployment" {
         container {
           name = "Webserver"
           image = var.image
+          port {
+            container_port = 80
+          }
         }
       }
     }
