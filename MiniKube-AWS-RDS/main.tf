@@ -71,3 +71,25 @@ resource "kubernetes_service" "WordPress" {
     }
   }
 }
+
+// Creating an RDS AWS Resource
+resource "aws_db_instance" "WordPress-RDS" {
+  allocated_storage    = 1
+  max_allocated_storage = 5
+  storage_type         = "gp2"
+  engine               = "mysql"
+  engine_version       = "8.0.17"
+  instance_class       = "db.t2.micro"
+  name                 = "WordPress-DB"
+  username             = "HarshitDawar"
+  password             = "HarshitDawar"
+  parameter_group_name = "default.mysql8.0"
+  port = 3306
+  publicly_accessible = true
+
+  // Specifying the Minor Version Upgrade of MySQL to True
+  auto_minor_version_upgrade = true
+
+  // Deleting Automated Backups
+  delete_automated_backups = true
+}
