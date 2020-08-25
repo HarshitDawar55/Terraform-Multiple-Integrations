@@ -80,8 +80,11 @@ resource "aws_db_instance" "WordPress-RDS" {
   engine               = "mysql"
   engine_version       = "5.7"
   instance_class       = "db.t2.micro"
-  // Name of the Database to be created
+
+  //  Name of the RDS Database Instance in AWS!
   identifier           = "wordpressdb"
+
+  // Name of the Database to be created
   name                 = "wordpress"
   username             = "harshitdawar"
   password             = "harshitdawar12345"
