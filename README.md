@@ -1,12 +1,18 @@
 # Terraform-Multiple-Integrations
 :sparkles::fireworks::tada: Important points about this Repository!!!!! :tada::fireworks::sparkles:
 
+* This Repository will act as a reference/guide to explore Terraform and its providers.
+
+* Codes in this Repository consists of various Terraform providers like AWS, Kubernetes, etc. There are many more Integrations to come in this Repository.
+
+*  Each project in this Repository has been properly explained with comments.
+
 # What is Terraform?
 ![Terraform](Images/TM.png)
 
 * Terraform is a provisioning tool.
 
-* It is considered to be a part of DevOps World.
+* It is a part of DevOps World.
 
 * Terraform is used to provide Infrastructure as a Code (IAAS).
 
