@@ -2,7 +2,7 @@
 :sparkles::fireworks::tada: Important points about this Repository!!!!! :tada::fireworks::sparkles:
 
 # What is Terraform?
-![Openstack](Images/t.png)
+![Terraform](Images/TM.png)
 
 * Terraform is a provisioning tool.
 
