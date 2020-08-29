@@ -1,8 +1,8 @@
 variable "workspaces" {
   type = map
   default = {
-    "testing" = "openstack"
-    "production" = "aws"
+    testing = "openstack"
+    production = "aws"
   }
 }
 
