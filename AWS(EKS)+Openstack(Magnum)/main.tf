@@ -1,6 +1,6 @@
 provider "aws" {
   profile = "default"
-  region = "ap-south-1"
+  region = "ap-southeast-1"
 }
 
 provider "openstack" {
@@ -24,15 +24,38 @@ resource "aws_eks_fargate_profile" "Production" {
   count = var.production ? 1 : 0
 
   # Put your cluster Name
-  cluster_name = "Cassandra-Deployment"
+  cluster_name = "cassandra-deployment"
 
   # Put the Profile name of Fargate
-  fargate_profile_name = "Cassandra"
+  fargate_profile_name = "cassandra"
   pod_execution_role_arn = "<AWS Resource Name of the IAM Role which grants permission for the EKS Fargate Profile>"
 
   # Subnet IDS which are to attached to the AWS EKS Fargate Profile
-  subnet_ids = [""]
+  subnet_ids = ["subnet-44e49308", "subnet-ba7372d2", "subnet-e567de9e"]
+
+  # Selectors for Fargate Profile, namespace is compulsory to give, to select Kubernetes Pods from that.
   selector {
     namespace = ["kube-system", "default"]
   }
+}
+
+resource "openstack_containerinfra_clustertemplate_v1" "Testing-Template" {
+  # This resource will only be created when Testing workspace is selected. It is possible because of the below statement.
+  count = var.testing ? 1 : 0
+
+  coe = "kubernetes"
+  name = "cassandra_deployment"
+  image = "<Name of Image which has to be used to launch kubernetes Pods>"
+  flavor = "m1.small"
+  master_flavor = "m1.large"
+  master_lb_enabled = true
+  floating_ip_enabled = true
+  network_driver = "flannel"
+  volume_driver = "cinder"
+  docker_volume_size = 15
+  dns_nameserver = "<IP of the DNS nameserver>"
+}
+
+resource "openstack_containerinfra_cluster_v1" "Testing" {
+  name = "cassandra_cluster"
 }
