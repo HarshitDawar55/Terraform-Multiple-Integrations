@@ -1,11 +1,13 @@
-variable "workspaces" {
-  type = map
-  default = {
-    testing = "openstack"
-    production = "aws"
-  }
+variable "production" {
+  type = string
+  default = true
+}
+
+variable "testing" {
+  type = string
+  default = false
 }
 
 output "workspaces" {
-  value = var.workspaces
+  value = [var.production, var.testing]
 }
