@@ -57,5 +57,14 @@ resource "openstack_containerinfra_clustertemplate_v1" "Testing-Template" {
 }
 
 resource "openstack_containerinfra_cluster_v1" "Testing" {
+  # This resource will only be created when Testing workspace is selected. It is possible because of the below statement.
+  count = var.testing ? 1 : 0
+
   name = "cassandra_cluster"
+  cluster_template_id = openstack_containerinfra_clustertemplate_v1.Testing-Template.id
+  master_count = 1
+  node_count = 5
+
+  # Be sure below keypair is available with you & also present in the Openstack KeyPairs!
+  keypair = "<Name of the keypair to be attached>"
 }
