@@ -12,3 +12,11 @@ provider "github" {
 }
 
 
+resource "github_repository" "Repo_From_Terraform" {
+  name = "Repo_From_Terraform"
+  description = "This Repository is a test Repository from Terraform!"
+}
+
+output "GitHub_Repo_Output" {
+  value = github_repository.Repo_From_Terraform
+}
